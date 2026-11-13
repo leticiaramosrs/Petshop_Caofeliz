@@ -45,14 +45,14 @@
 @keyframes cf-paw-out{from{opacity:.7;transform:translate(var(--x),var(--y)) rotate(var(--angle)) scale(.4)}to{opacity:0;transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) - 75px)) rotate(calc(var(--angle) + 30deg)) scale(1.3)}}
 @media(max-width:640px){.ribbon-track{animation-duration:18s}@keyframes cf-float{0%,100%{transform:translateY(3px) rotate(6deg)}50%{transform:translateY(-12px) rotate(-1deg)}}}
 }
-</style><style id="cf-cards-choreography">
+</style><style id="cf-cards-nure-stack">
 @media(prefers-reduced-motion:no-preference){
-.motion-ready #servicos .card{opacity:1;translate:0 0;animation:none;transform-origin:center bottom;backface-visibility:hidden}
-.motion-ready #servicos .cards-live .card{animation:cf-card-deal 1.05s cubic-bezier(.16,.8,.25,1) both,cf-card-wave 6s ease-in-out infinite;animation-delay:var(--deal-delay),var(--wave-delay);will-change:transform}
-#servicos .card:nth-child(odd){--deal-x:-34px;--deal-turn:18deg}#servicos .card:nth-child(even){--deal-x:34px;--deal-turn:-18deg}
-@keyframes cf-card-deal{0%{opacity:0;transform:perspective(900px) translate3d(var(--deal-x),75px,0) rotateY(var(--deal-turn))}65%{opacity:1;transform:perspective(900px) translate3d(0,-9px,0) rotateY(0)}100%{opacity:1;transform:perspective(900px) translate3d(0,0,0) rotateY(0)}}
-@keyframes cf-card-wave{0%,8%,44%,100%{transform:translate3d(0,0,0)}24%{transform:translate3d(0,-16px,0)}}
-@media(max-width:640px){#servicos .card{--deal-x:0px!important;--deal-turn:0deg!important}@keyframes cf-card-wave{0%,8%,44%,100%{transform:translate3d(0,0,0)}24%{transform:translate3d(0,-11px,0)}}}
+#servicos .grid{display:flex;flex-direction:column;align-items:center;gap:32px;position:relative}
+#servicos .grid:after{content:'';height:clamp(220px,38svh,400px);flex:none}
+.motion-ready #servicos .card,#servicos .card{position:sticky;top:calc(100px + var(--stack-i,0)*15px);width:calc((100% - 54px)/4);height:var(--stack-card-height,auto);flex:none;animation:none;opacity:1;translate:none;transform:none;transition:box-shadow .3s}
+#servicos .card:nth-child(1){--stack-i:0;z-index:1}#servicos .card:nth-child(2){--stack-i:1;z-index:2}#servicos .card:nth-child(3){--stack-i:2;z-index:3}#servicos .card:nth-child(4){--stack-i:3;z-index:4}
+@media(max-width:960px){.motion-ready #servicos .card,#servicos .card{width:calc((100% - 18px)/2)}}
+@media(max-width:640px){.motion-ready #servicos .card,#servicos .card{width:calc((100% - 12px)/2);top:calc(92px + var(--stack-i,0)*12px)}}
 }
 </style></head>
 <body>
@@ -311,6 +311,8 @@ document.addEventListener("DOMContentLoaded", () => {
  reduced.addEventListener('change',()=>{if(reduced.matches){document.documentElement.classList.remove('motion-ready');targets.forEach(el=>el.classList.add('is-visible'))}});
 })();
 </script><script>
+(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const grid=document.querySelector('#servicos .grid');if(!grid)return;const cards=[...grid.children];function size(){cards.forEach(c=>c.style.removeProperty('--stack-card-height'));if(media.matches)return;const n=innerWidth<=960?2:4;const heights=cards.map(c=>c.scrollHeight+2);cards.forEach((c,i)=>{const first=Math.floor(i/n)*n;c.style.setProperty('--stack-card-height',Math.max(...heights.slice(first,first+n))+'px')})}addEventListener('resize',size,{passive:true});media.addEventListener('change',size);size()})();
+</script><script>
 (()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const hero=document.querySelector('.hero'),visual=document.querySelector('.pet-visual'),heading=hero?.querySelector('h1');
  const progress=document.createElement('div');progress.className='cf-progress';progress.setAttribute('aria-hidden','true');document.body.append(progress);
@@ -322,7 +324,5 @@ document.addEventListener("DOMContentLoaded", () => {
  if(matchMedia('(pointer:fine)').matches)document.querySelector('main')?.addEventListener('pointermove',trail,{passive:true});
  else document.querySelector('.hero')?.addEventListener('pointerdown',trail,{passive:true});
 })();
-</script><script>
-(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver'in window))return;const grid=document.querySelector('#servicos .grid');if(!grid)return;[...grid.children].forEach((card,i)=>{card.style.setProperty('--deal-delay',i*.13+'s');card.style.setProperty('--wave-delay',1.25+i*1.15+'s')});const io=new IntersectionObserver(entries=>{entries.forEach(e=>grid.classList.toggle('cards-live',e.isIntersecting))},{threshold:.06});io.observe(grid)})();
 </script></body>
 </html>
