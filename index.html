@@ -45,6 +45,15 @@
 @keyframes cf-paw-out{from{opacity:.7;transform:translate(var(--x),var(--y)) rotate(var(--angle)) scale(.4)}to{opacity:0;transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) - 75px)) rotate(calc(var(--angle) + 30deg)) scale(1.3)}}
 @media(max-width:640px){.ribbon-track{animation-duration:18s}@keyframes cf-float{0%,100%{transform:translateY(3px) rotate(6deg)}50%{transform:translateY(-12px) rotate(-1deg)}}}
 }
+</style><style id="cf-cards-choreography">
+@media(prefers-reduced-motion:no-preference){
+.motion-ready #servicos .card{opacity:1;translate:0 0;animation:none;transform-origin:center bottom;backface-visibility:hidden}
+.motion-ready #servicos .cards-live .card{animation:cf-card-deal 1.05s cubic-bezier(.16,.8,.25,1) both,cf-card-wave 6s ease-in-out infinite;animation-delay:var(--deal-delay),var(--wave-delay);will-change:transform}
+#servicos .card:nth-child(odd){--deal-x:-34px;--deal-turn:18deg}#servicos .card:nth-child(even){--deal-x:34px;--deal-turn:-18deg}
+@keyframes cf-card-deal{0%{opacity:0;transform:perspective(900px) translate3d(var(--deal-x),75px,0) rotateY(var(--deal-turn))}65%{opacity:1;transform:perspective(900px) translate3d(0,-9px,0) rotateY(0)}100%{opacity:1;transform:perspective(900px) translate3d(0,0,0) rotateY(0)}}
+@keyframes cf-card-wave{0%,8%,44%,100%{transform:translate3d(0,0,0)}24%{transform:translate3d(0,-16px,0)}}
+@media(max-width:640px){#servicos .card{--deal-x:0px!important;--deal-turn:0deg!important}@keyframes cf-card-wave{0%,8%,44%,100%{transform:translate3d(0,0,0)}24%{transform:translate3d(0,-11px,0)}}}
+}
 </style></head>
 <body>
 
@@ -313,5 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
  if(matchMedia('(pointer:fine)').matches)document.querySelector('main')?.addEventListener('pointermove',trail,{passive:true});
  else document.querySelector('.hero')?.addEventListener('pointerdown',trail,{passive:true});
 })();
+</script><script>
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver'in window))return;const grid=document.querySelector('#servicos .grid');if(!grid)return;[...grid.children].forEach((card,i)=>{card.style.setProperty('--deal-delay',i*.13+'s');card.style.setProperty('--wave-delay',1.25+i*1.15+'s')});const io=new IntersectionObserver(entries=>{entries.forEach(e=>grid.classList.toggle('cards-live',e.isIntersecting))},{threshold:.06});io.observe(grid)})();
 </script></body>
 </html>
